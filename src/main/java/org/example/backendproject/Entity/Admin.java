@@ -2,7 +2,6 @@ package org.example.backendproject.Entity;
 
 import jakarta.persistence.*;
 
-import javax.print.Doc;
 import java.util.List;
 
 @Entity
@@ -15,8 +14,9 @@ public class Admin {
 
     private String password;
 
+    //Se crea la relación 1 a muchos (Un admin puede tener muchos doctores)
     @OneToMany(mappedBy = "admin")
-    private List<Doctor>  doctors;
+    private List<Doctor> doctors;
 
     public Admin() {
 
