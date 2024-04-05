@@ -1,48 +1,68 @@
 package org.example.backendproject.Entity;
 
+import jakarta.persistence.*;
+import org.example.backendproject.Entity.Medition;
+
+@Entity
 public class Sample {
-    private int x;
-    private int y;
-    private int z;
-    private int t;
+    @Id
+    private Long id;
+    int time;
+    int posX;
+    int posY;
+    int posZ;
+    //Muchas muestras pueden ser de una medicion
+    @ManyToOne()
+    @JoinColumn(name = "MeditionID")
+    private Medition medition;
 
-    public Sample(int x, int y, int z, int t) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.t = t;
-    }
-    public Sample(){}
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
+    public Sample(int time, int posX, int posY, int posZ) {
+        this.time = time;
+        this.posX = posX;
+        this.posY = posY;
+        this.posZ = posZ;
     }
 
-    public int getY() {
-        return y;
+    public Sample() {
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public int getTime() {
+        return time;
     }
 
-    public int getZ() {
-        return z;
+    public void setTime(int time) {
+        this.time = time;
     }
 
-    public void setZ(int z) {
-        this.z = z;
+    public int getPosX() {
+        return posX;
     }
 
-    public int getT() {
-        return t;
+    public void setPosX(int posX) {
+        this.posX = posX;
     }
 
-    public void setT(int t) {
-        this.t = t;
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    public int getPosZ() {
+        return posZ;
+    }
+
+    public void setPosZ(int posZ) {
+        this.posZ = posZ;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

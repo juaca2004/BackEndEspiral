@@ -19,12 +19,20 @@ public class Doctor {
 
     private String password;
 
+    //Se crea la relación muchos a 1 (Muchos doctores tienen un admin)
     @ManyToOne()
     @JoinColumn(name = "AdminID")
     private Admin admin;
+
+    //Se crea la relación 1 a muchos (Un doctor puede tener muchos pacientes)
+    @OneToMany(mappedBy = "doctor")
+    private List<Patient> patients;
+
+//    @OneToMany(mappedBy = "doctor")
+//    private List<Patients> patients; //PREGUNTARLE A DOMI! -Val
     public Doctor() {
     }
-
+    
     public Doctor(String name, String cc, String email, String phone, String password) {
         this.name = name;
         this.cc = cc;
@@ -72,15 +80,6 @@ public class Doctor {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    public Admin getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -88,9 +87,4 @@ public class Doctor {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
-    @OneToMany(mappedBy = "doctor")
-    private List<Patients> patients; //PREGUNTARLE A DOMI! -Val
-
 }
