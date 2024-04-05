@@ -2,6 +2,7 @@ package org.example.backendproject.Entity;
 
 import jakarta.persistence.*;
 
+
 import java.util.List;
 
 @Entity

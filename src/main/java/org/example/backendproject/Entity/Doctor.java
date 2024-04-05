@@ -19,10 +19,6 @@ public class Doctor {
 
     private String password;
 
-    //Se crea la relación muchos a 1 (Muchos doctores tienen un admin)
-    @ManyToOne()
-    @JoinColumn(name = "AdminID")
-    private Admin admin;
 
     //Se crea la relación 1 a muchos (Un doctor puede tener muchos pacientes)
     @OneToMany(mappedBy = "doctor")

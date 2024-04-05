@@ -14,10 +14,6 @@ public class Admin {
 
     private String password;
 
-    //Se crea la relación 1 a muchos (Un admin puede tener muchos doctores)
-    @OneToMany(mappedBy = "admin")
-    private List<Doctor> doctors;
-
     public Admin() {
 
     }
