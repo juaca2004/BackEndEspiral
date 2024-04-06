@@ -1,5 +1,6 @@
 package org.example.backendproject;
 
+import org.example.backendproject.Entity.Admin;
 import org.example.backendproject.Entity.Doctor;
 import org.example.backendproject.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class EchoController {
     public ArrayList<Doctor> listDoctor(){
         return (ArrayList<Doctor>) repositoryDoctor.findAll();
     }
+
     //Crear un doctor
     @PostMapping("doctor/create")
     public ResponseEntity<?> createDoctor(@RequestBody Doctor doctor){
@@ -45,10 +47,11 @@ public class EchoController {
         return null;
     }
     //Eliminar doctores
-    @GetMapping("doctor/delete")
+    @DeleteMapping("doctor/delete")
     public ResponseEntity<?> deleteDoctor(@RequestBody String doctorCC) {
         //Realizar algoritmo de busqueda binaria para la busqueda y eliminación del doctor
         return null;
     }
     //C(create )R (read ) U(update ) D (delete)
+
 }
