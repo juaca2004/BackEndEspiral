@@ -47,8 +47,43 @@ public class EchoController {
     //Eliminar doctores
     @GetMapping("doctor/delete")
     public ResponseEntity<?> deleteDoctor(@RequestBody String doctorCC) {
-        //Realizar algoritmo de busqueda binaria para la busqueda y eliminación del doctor
-        return null;
+        ArrayList<Doctor> listForDelete = listDoctorForDelete();
+        Doctor[] array = listForDelete.toArray(new Doctor[0]);
+        int index = binarySearch(array, doctorCC);
+        if (index != -1) {
+            repositoryDoctor.delete(array[index]);
+            return ResponseEntity.ok("Doctor eliminado correctamente");
+        } else {
+
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    //Lo coloco aqui pq no se pq no me dejo llamarlo dsd arriba
+    public ArrayList<Doctor> listDoctorForDelete() {
+
+        return (ArrayList<Doctor>) repositoryDoctor.findAll();
+    }
+
+
+    //Metodo de busqueda binaria mientras aprendemos filtrados por tablas jajaja (compara por cedula)
+    public int binarySearch(Doctor[] array, String target) {
+        int left = 0;
+        int right = array.length - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int cmp = array[mid].getCc().compareTo(target);
+            if (cmp == 0) {
+                return mid; // Encontrado
+            } else if (cmp < 0) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1; // No encontrado
     }
     //C(create )R (read ) U(update ) D (delete)
 }
