@@ -37,8 +37,15 @@ public class EchoController {
     //Crear un doctor
     @PostMapping("doctor/create")
     public ResponseEntity<?> createDoctor(@RequestBody Doctor doctor){
-        repositoryDoctor.save(doctor); //Crear doctor
-        return ResponseEntity.status(200).body("doctor creado");
+        ArrayList<Doctor> listOfDoctor = listDoctorForDelete();
+        Doctor[] array = listOfDoctor.toArray(new Doctor[0]);
+        int index = binarySearch(array, doctor.getCc());
+        if (index != -1) {
+            return ResponseEntity.ok("No se puede añadir, CC repetida");
+        } else {
+            repositoryDoctor.save(doctor);
+            return ResponseEntity.status(200).body("doctor creado");
+        }
     }
     //Buscar doctores
     @GetMapping("doctor/search")
