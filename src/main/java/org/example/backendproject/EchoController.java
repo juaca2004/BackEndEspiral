@@ -1,13 +1,18 @@
 package org.example.backendproject;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.example.backendproject.Entity.Admin;
 import org.example.backendproject.Entity.Doctor;
+import org.example.backendproject.ResponseRequest.*;
 import org.example.backendproject.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.example.backendproject.repository.AdminRepository;
+        import org.example.backendproject.repository.AdminRepository;
 
 import java.util.ArrayList;
 
@@ -28,6 +33,7 @@ public class EchoController {
         return  ResponseEntity.status(200).body(doctor);
     }
 
+    
     //Listar doctores
     @GetMapping("doctor/list")
     public ArrayList<Doctor> listDoctor(){
@@ -88,5 +94,51 @@ public class EchoController {
         return -1; // No encontrado
     }
     //C(create )R (read ) U(update ) D (delete)
+
+
+    @PostMapping("admin/login")
+    public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest){
+        ArrayList<Admin> list = (ArrayList<Admin>) repositoryAdmin.findAll();
+        Admin[] array = list.toArray(new Admin[0]);
+        int index = binarySearch(array,loginRequest.getUsername());
+        if(index == -1){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nombre de usuario incorrecto");
+        }else{
+          if(list.get(index).getPassword().equals(loginRequest.getPassword())){
+              String token = generateToken(list.get(index));
+              return ResponseEntity.ok(new LoginResponse(token));
+          }else {
+              return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
+          }
+        }
+    }
+
+    private String generateToken(Admin admin) {
+        String token = Jwts.builder()
+                .setSubject(admin.getName())
+                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS512))
+                .compact();
+        return token;
+    }
+
+    public int binarySearch(Admin[] array, String target) {
+        int left = 0;
+        int right = array.length - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            System.out.println(array[mid].getName());
+            System.out.println(target);
+            int cmp = array[mid].getName().compareTo(target);
+            if (cmp == 0) {
+                return mid; // Encontrado
+            } else if (cmp < 0) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1; // No encontrado
+    }
 
 }
