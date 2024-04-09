@@ -101,6 +101,24 @@ public class EchoController {
         }
         return -1; // No encontrado
     }
+
+    public int binarySearchDoctorName(Doctor[] array, String target) {
+        int left = 0;
+        int right = array.length - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int cmp = array[mid].getName().compareTo(target);
+            if (cmp == 0) {
+                return mid; // Encontrado
+            } else if (cmp < 0) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1; // No encontrado
+    }
     //C(create )R (read ) U(update ) D (delete)
 
 
@@ -147,6 +165,30 @@ public class EchoController {
             }
         }
         return -1; // No encontrado
+    }
+    @PostMapping("doctor/login")
+    public ResponseEntity<?> loginDoctor(@RequestBody LoginRequest loginRequest){
+        ArrayList<Doctor> list = (ArrayList<Doctor>) repositoryDoctor.findAll();
+        Doctor[] array = list.toArray(new Doctor[0]);
+        int index = binarySearchDoctorName(array,loginRequest.getUsername());
+        if(index == -1){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nombre de usuario incorrecto");
+        }else{
+            if(list.get(index).getPassword().equals(loginRequest.getPassword())){
+                String token = generateToken(list.get(index));
+                return ResponseEntity.ok(new LoginResponse(token));
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
+            }
+        }
+    }
+
+    private String generateToken(Doctor doctor) {
+        String token = Jwts.builder()
+                .setSubject(doctor.getName())
+                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS512))
+                .compact();
+        return token;
     }
 
 
