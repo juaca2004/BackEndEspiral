@@ -45,7 +45,18 @@
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.2</version> <!-- Reemplaza con la última versión disponible -->
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.2</version> <!-- Reemplaza con la última versión disponible -->
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.2</version> <!-- Reemplaza con la última versión disponible -->
 			<scope>runtime</scope>
 		</dependency>
