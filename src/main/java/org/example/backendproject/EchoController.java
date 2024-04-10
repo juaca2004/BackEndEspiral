@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-        import org.example.backendproject.repository.AdminRepository;
+import org.example.backendproject.repository.AdminRepository;
 
 import java.util.ArrayList;
 
@@ -58,22 +57,30 @@ public class EchoController {
     @GetMapping("doctor/search")
     public ResponseEntity<?> searchDoctor(@RequestBody String doctorCC) {
         //Realizar algoritmo de busqueda binaria para la busqueda del doctor
-        return null;
+        return ResponseEntity.status(200).body(doctorCC);
     }
+
+    @DeleteMapping("doctor/d")
+    public ResponseEntity<?> d(@RequestBody DeleteRequest request) {
+        //Realizar algoritmo de busqueda binaria para la busqueda del doctor
+        return ResponseEntity.status(200).body(request);
+    }
+
     //Eliminar doctores
     @DeleteMapping("doctor/delete")
-    public ResponseEntity<?> deleteDoctor(@RequestBody String doctorCC) {
+    public ResponseEntity<?> deleteDoctor(@RequestBody DeleteRequest doctorCc) {
+
         ArrayList<Doctor> listForDelete = listDoctorForDelete();
         Doctor[] array = listForDelete.toArray(new Doctor[0]);
-        int index = binarySearch(array, doctorCC);
+        int index = binarySearch(array, doctorCc.getDoctorCc());
         if (index != -1) {
             repositoryDoctor.delete(array[index]);
             return ResponseEntity.ok("Doctor eliminado correctamente");
         } else {
-
+             System.out.println("jajsjajsa");
             return ResponseEntity.notFound().build();
         }
-
+        
     }
 
     //Lo coloco aqui pq no se pq no me dejo llamarlo dsd arriba
