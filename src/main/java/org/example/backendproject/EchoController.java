@@ -60,27 +60,21 @@ public class EchoController {
         return ResponseEntity.status(200).body(doctorCC);
     }
 
-    @DeleteMapping("doctor/d")
-    public ResponseEntity<?> d(@RequestBody DeleteRequest request) {
-        //Realizar algoritmo de busqueda binaria para la busqueda del doctor
-        return ResponseEntity.status(200).body(request);
-    }
-
     //Eliminar doctores
-    @DeleteMapping("doctor/delete")
-    public ResponseEntity<?> deleteDoctor(@RequestBody DeleteRequest doctorCc) {
+    @DeleteMapping("doctor/delete/{cc}")
+    public ResponseEntity<?> deleteDoctor(@PathVariable("cc") String cc) {
 
-        ArrayList<Doctor> listForDelete = listDoctorForDelete();
-        Doctor[] array = listForDelete.toArray(new Doctor[0]);
-        int index = binarySearch(array, doctorCc.getDoctorCc());
-        if (index != -1) {
-            repositoryDoctor.delete(array[index]);
-            return ResponseEntity.ok("Doctor eliminado correctamente");
-        } else {
-             System.out.println("jajsjajsa");
-            return ResponseEntity.notFound().build();
+        var doctor = repositoryDoctor.searchByCc(cc);
+
+        if(doctor.isPresent()){
+            Doctor doctorFound = doctor.get();
+            repositoryDoctor.delete(doctorFound);
+            System.out.println("doctor eliminado correctamente so");
+            return ResponseEntity.status(200).body(doctorFound);
+        }else{
+            return ResponseEntity.status(400).body(new DeleteRequest("Usuario no encontrado"));
         }
-        
+
     }
 
     //Lo coloco aqui pq no se pq no me dejo llamarlo dsd arriba
