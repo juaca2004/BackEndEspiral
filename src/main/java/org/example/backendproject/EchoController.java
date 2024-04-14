@@ -16,6 +16,7 @@ import org.example.backendproject.repository.AdminRepository;
 
 import java.util.ArrayList;
 
+@CrossOrigin(maxAge = 3600)
 @RestController
 public class EchoController {
 
@@ -43,29 +44,26 @@ public class EchoController {
     //Crear un doctor
     @PostMapping("doctor/create")
     public ResponseEntity<?> createDoctor(@RequestBody Doctor doctor){
-        ArrayList<Doctor> listOfDoctor = listDoctorForDelete();
-        Doctor[] array = listOfDoctor.toArray(new Doctor[0]);
-        int index = binarySearch(array, doctor.getCc());
-        if (index != -1) {
-            return ResponseEntity.ok("No se puede añadir, CC repetida");
-        } else {
+        var d = repositoryDoctor.searchByCc(doctor.getCc());
+        if(d.isEmpty()) { //Es pq no encontro a nadie con la misma cedula
+            doctor.setPassword("1234");
             repositoryDoctor.save(doctor);
-            return ResponseEntity.status(200).body("doctor creado");
+            return ResponseEntity.status(200).body(new RegisterResponse("Nuevo doctor creado"));
+        }
+        else{
+            return ResponseEntity.status(409).body(new RegisterResponse("El doctor ya existe en el sistema"));
         }
     }
     //Buscar doctores
     @GetMapping("doctor/search")
     public ResponseEntity<?> searchDoctor(@RequestBody String doctorCC) {
-        //Realizar algoritmo de busqueda binaria para la busqueda del doctor
         return ResponseEntity.status(200).body(doctorCC);
     }
 
     //Eliminar doctores
     @DeleteMapping("doctor/delete/{cc}")
     public ResponseEntity<?> deleteDoctor(@PathVariable("cc") String cc) {
-
         var doctor = repositoryDoctor.searchByCc(cc);
-
         if(doctor.isPresent()){
             Doctor doctorFound = doctor.get();
             repositoryDoctor.delete(doctorFound);
