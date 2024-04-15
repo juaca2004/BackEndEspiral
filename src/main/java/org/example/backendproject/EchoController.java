@@ -125,18 +125,11 @@ public class EchoController {
 
     @PostMapping("admin/login")
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest){
-        ArrayList<Admin> list = (ArrayList<Admin>) repositoryAdmin.findAll();
-        Admin[] array = list.toArray(new Admin[0]);
-        int index = binarySearch(array,loginRequest.getUsername());
-        if(index == -1){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nombre de usuario incorrecto");
+        var admin= repositoryAdmin.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
+        if(admin.isEmpty()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
         }else{
-          if(list.get(index).getPassword().equals(loginRequest.getPassword())){
-              String token = generateToken(list.get(index));
-              return ResponseEntity.ok(new LoginResponse(token));
-          }else {
-              return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
-          }
+            return ResponseEntity.status(200).body(new LoginResponse("Welcome!"));
         }
     }
 
