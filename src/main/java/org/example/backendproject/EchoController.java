@@ -39,7 +39,17 @@ public class EchoController {
     @GetMapping("doctor/list")
     public ArrayList<Doctor> listDoctor(){
         return (ArrayList<Doctor>) repositoryDoctor.findAll();
+
     }
+
+    @GetMapping("doctor/listDoctors")
+    public ResponseEntity<?> listDoctorPage(){
+
+        var doctors = repositoryDoctor.findAll();
+        return ResponseEntity.status(200).body(doctors);
+    }
+
+
 
     //Crear un doctor
     @PostMapping("doctor/create")
