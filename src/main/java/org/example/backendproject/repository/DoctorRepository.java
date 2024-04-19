@@ -1,5 +1,6 @@
 package org.example.backendproject.repository;
 
+import org.example.backendproject.Entity.Admin;
 import org.example.backendproject.Entity.Doctor;
 
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,9 @@ import java.util.Optional;
 
 public interface DoctorRepository extends CrudRepository<Doctor,Long> {
     //CRUD
+
+    @Query("SELECT u FROM Doctor u WHERE u.name =:name AND u.password=:password")
+    public Optional<Doctor> searchByLogin(@Param("name") String name, @Param("password") String password);
 
     @Query("SELECT u FROM Doctor u WHERE u.cc =:cc")
     public Optional<Doctor>searchByCc(@Param("cc") String cc);

@@ -171,30 +171,39 @@ public class EchoController {
         return -1; // No encontrado
     }
 
+    //Log in del doctor
     @PostMapping("doctor/login")
     public ResponseEntity<?> loginDoctor(@RequestBody LoginRequest loginRequest){
-        ArrayList<Doctor> list = (ArrayList<Doctor>) repositoryDoctor.findAll();
-        Doctor[] array = list.toArray(new Doctor[0]);
-        int index = binarySearchDoctorName(array,loginRequest.getUsername());
-        if(index == -1){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nombre de usuario incorrecto");
+        var doctor= repositoryDoctor.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
+        if(doctor.isEmpty()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
         }else{
-            if(list.get(index).getPassword().equals(loginRequest.getPassword())){
-                String token = generateToken(list.get(index));
-                return ResponseEntity.ok(new LoginResponse(token));
-            }else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
-            }
+            return ResponseEntity.status(200).body(new LoginResponse("Welcome!"));
         }
     }
 
-    private String generateToken(Doctor doctor) {
-        String token = Jwts.builder()
-                .setSubject(doctor.getName())
-                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS512))
-                .compact();
-        return token;
+    //Opción de cambiar contraseña
+
+    @PostMapping("doctor/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        var optionalDoctor = repositoryDoctor.searchByLogin(changePasswordRequest.getUsername(), changePasswordRequest.getPassword());
+        if (optionalDoctor.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+        } else {
+            if(changePasswordRequest.getPasswordNEW1().equals(changePasswordRequest.getPasswordNEW2())){
+                Doctor doctor = optionalDoctor.get();
+                doctor.setPassword(changePasswordRequest.getPasswordNEW1());
+               repositoryDoctor.save(doctor);
+                return ResponseEntity.status(200).body("password changed");
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Both passwords are not the same");
+            }
+
+        }
     }
+
+
 
 
 
