@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.example.backendproject.repository.AdminRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -67,7 +68,43 @@ public class EchoController {
     //Buscar doctores
     @GetMapping("doctor/search")
     public ResponseEntity<?> searchDoctor(@RequestBody String doctorCC) {
-        return ResponseEntity.status(200).body(doctorCC);
+        Iterable<Doctor> arraydoctor = repositoryDoctor.findAll();
+        List<Doctor> doctorsList = new ArrayList<>();
+        for (Doctor doctor : arraydoctor) {
+            doctorsList.add(doctor);
+        }
+
+
+        //Realizar algoritmo de busqueda binaria para la busqueda del doctor
+
+        return ResponseEntity.ok(binarySearchByCC(doctorsList, doctorCC));
+    }
+
+    public Doctor binarySearchByCC(List<Doctor> doctors, String cc) {
+        int left = 0;
+        int right = doctors.size() - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            Doctor midDoctor = doctors.get(mid);
+
+            int ccComparison = cc.compareTo(midDoctor.getCc());
+
+            // Check if cc is present at mid
+            if (ccComparison == 0) {
+                return midDoctor;
+            }
+
+            // If cc is greater, ignore left half
+            if (ccComparison > 0) {
+                left = mid + 1;
+            } else { // If cc is smaller, ignore right half
+                right = mid - 1;
+            }
+        }
+
+        // If we reach here, then the cc was not present in the list
+        return null;
     }
 
     //Eliminar doctores
