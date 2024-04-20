@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.example.backendproject.repository.AdminRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -66,8 +67,15 @@ public class EchoController {
     }
     //Buscar doctores
     @GetMapping("doctor/search")
-    public ResponseEntity<?> searchDoctor(@RequestBody String doctorCC) {
-        return ResponseEntity.status(200).body(doctorCC);
+    public ResponseEntity<?> searchDoctor(@PathVariable("cc") String cc) {
+        var doctor = repositoryDoctor.searchByCc(cc);
+        if(doctor.isPresent()){
+            Doctor doctorFound = doctor.get();
+            return ResponseEntity.status(200).body(doctorFound);
+        }else{
+            return ResponseEntity.status(400).body(new DeleteRequest("Usuario no encontrado"));
+        }
+
     }
 
     //Eliminar doctores
