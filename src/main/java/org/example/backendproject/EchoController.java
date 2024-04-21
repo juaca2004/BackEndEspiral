@@ -112,24 +112,6 @@ public class EchoController {
     }
 
 
-    public int binarySearchDoctorName(Doctor[] array, String target) {
-        int left = 0;
-        int right = array.length - 1;
-
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            int cmp = array[mid].getName().compareTo(target);
-            if (cmp == 0) {
-                return mid; // Encontrado
-            } else if (cmp < 0) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-        return -1; // No encontrado
-    }
-
     //C(create )R (read ) U(update ) D (delete)
 
 
@@ -137,39 +119,13 @@ public class EchoController {
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest){
         var admin= repositoryAdmin.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
         if(admin.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect name or password"));
         }else{
-            return ResponseEntity.status(200).body(new LoginResponse("Welcome!"));
+            return ResponseEntity.status(200).body(admin.get());
         }
     }
 
-    private String generateToken(Admin admin) {
-        String token = Jwts.builder()
-                .setSubject(admin.getName())
-                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS512))
-                .compact();
-        return token;
-    }
 
-    public int binarySearch(Admin[] array, String target) {
-        int left = 0;
-        int right = array.length - 1;
-
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            System.out.println(array[mid].getName());
-            System.out.println(target);
-            int cmp = array[mid].getName().compareTo(target);
-            if (cmp == 0) {
-                return mid; // Encontrado
-            } else if (cmp < 0) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-        return -1; // No encontrado
-    }
 
     //Log in del doctor
     @PostMapping("doctor/login")
