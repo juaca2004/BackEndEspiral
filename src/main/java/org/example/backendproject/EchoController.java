@@ -178,7 +178,7 @@ public class EchoController {
         if(doctor.isEmpty()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
         }else{
-            return ResponseEntity.status(200).body(new LoginResponse("Welcome!"));
+            return ResponseEntity.status(200).body(doctor.get());
         }
     }
 
@@ -201,7 +201,7 @@ public class EchoController {
             }
 
         }
-    }
+    } 
 
 
 
