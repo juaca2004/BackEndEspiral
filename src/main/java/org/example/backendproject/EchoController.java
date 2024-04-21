@@ -119,7 +119,7 @@ public class EchoController {
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest){
         var admin= repositoryAdmin.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
         if(admin.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect name or password"));
         }else{
             return ResponseEntity.status(200).body(admin.get());
         }
