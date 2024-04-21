@@ -2,20 +2,20 @@ package org.example.backendproject.ResponseRequest;
 
 public class LoginRequest{
 
-    private String username;
+    private String CC;
     private String password;
 
-    public LoginRequest(String username, String password) {
-        this.username = username;
+    public LoginRequest(String CC, String password) {
+        this.CC = CC;
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getCC() {
+        return CC;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setCC(String CC) {
+        this.CC = CC;
     }
 
     public String getPassword() {
