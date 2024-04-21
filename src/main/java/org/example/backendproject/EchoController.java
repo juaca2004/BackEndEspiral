@@ -66,7 +66,7 @@ public class EchoController {
         }
     }
     //Buscar doctores
-    @GetMapping("doctor/search")
+    @GetMapping("doctor/search/{cc}")
     public ResponseEntity<?> searchDoctor(@PathVariable("cc") String cc) {
         var doctor = repositoryDoctor.searchByCc(cc);
         if(doctor.isPresent()){
