@@ -176,7 +176,7 @@ public class EchoController {
     public ResponseEntity<?> loginDoctor(@RequestBody LoginRequest loginRequest){
         var doctor= repositoryDoctor.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
         if(doctor.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect name or password"));
         }else{
             return ResponseEntity.status(200).body(doctor.get());
         }
@@ -188,20 +188,20 @@ public class EchoController {
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         var optionalDoctor = repositoryDoctor.searchByLogin(changePasswordRequest.getUsername(), changePasswordRequest.getPassword());
         if (optionalDoctor.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+            return ResponseEntity.status(401).body("Incorrect name or password");
         } else {
             if(changePasswordRequest.getPasswordNEW1().equals(changePasswordRequest.getPasswordNEW2())){
                 Doctor doctor = optionalDoctor.get();
                 doctor.setPassword(changePasswordRequest.getPasswordNEW1());
-               repositoryDoctor.save(doctor);
+                repositoryDoctor.save(doctor);
                 return ResponseEntity.status(200).body("password changed");
             }
             else{
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Both passwords are not the same");
+                return ResponseEntity.status(402).body("Both passwords are not the same");
             }
 
         }
-    } 
+    }
 
 
 
