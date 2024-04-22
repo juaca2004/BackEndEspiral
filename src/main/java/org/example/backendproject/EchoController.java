@@ -116,10 +116,10 @@ public class EchoController {
 
 
     @PostMapping("admin/login")
-    public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest){
-        var admin= repositoryAdmin.searchByLogin(loginRequest.getCC(),loginRequest.getPassword());
+    public ResponseEntity<?> loginAdmin(@RequestBody LoginRequestAdmin loginRequest){
+        var admin= repositoryAdmin.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
         if(admin.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect CC or password"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect name or password"));
         }else{
             return ResponseEntity.status(200).body(admin.get());
         }
