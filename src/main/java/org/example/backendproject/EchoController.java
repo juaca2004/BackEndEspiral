@@ -1,10 +1,6 @@
 package org.example.backendproject;
 
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import org.example.backendproject.Entity.Admin;
 import org.example.backendproject.Entity.Doctor;
 import org.example.backendproject.ResponseRequest.*;
 import org.example.backendproject.repository.DoctorRepository;
@@ -124,10 +120,10 @@ public class EchoController {
 
 
     @PostMapping("admin/login")
-    public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest){
-        var admin= repositoryAdmin.searchByLogin(loginRequest.getCC(),loginRequest.getPassword());
+    public ResponseEntity<?> loginAdmin(@RequestBody LoginRequestAdmin loginRequest){
+        var admin= repositoryAdmin.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
         if(admin.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect CC or password"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect name or password"));
         }else{
             return ResponseEntity.status(200).body(admin.get());
         }
@@ -137,7 +133,7 @@ public class EchoController {
 
     //Log in del doctor
     @PostMapping("doctor/login")
-    public ResponseEntity<?> loginDoctor(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> loginDoctor(@RequestBody LoginRequestDoctor loginRequest){
         var doctor= repositoryDoctor.searchByLogin(loginRequest.getCC(),loginRequest.getPassword());
         if(doctor.isEmpty()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect CC or password"));
