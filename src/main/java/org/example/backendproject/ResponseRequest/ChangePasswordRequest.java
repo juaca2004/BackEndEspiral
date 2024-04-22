@@ -1,24 +1,24 @@
 package org.example.backendproject.ResponseRequest;
 
 public class ChangePasswordRequest {
-    private String username;
+    private String cc;
     private String password;
     private String passwordNEW1;
     private String passwordNEW2;
 
-    public ChangePasswordRequest(String username, String password, String passwordNEW1, String passwordNEW2) {
-        this.username = username;
+    public ChangePasswordRequest(String cc, String password, String passwordNEW1, String passwordNEW2) {
+        this.cc = cc;
         this.password = password;
         this.passwordNEW1 = passwordNEW1;
         this.passwordNEW2 = passwordNEW2;
     }
 
-    public String getUsername() {
-        return username;
+    public String getCc() {
+        return cc;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setCc(String cc) {
+        this.cc = cc;
     }
 
     public String getPassword() {

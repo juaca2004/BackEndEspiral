@@ -125,9 +125,9 @@ public class EchoController {
 
     @PostMapping("admin/login")
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest){
-        var admin= repositoryAdmin.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
+        var admin= repositoryAdmin.searchByLogin(loginRequest.getCC(),loginRequest.getPassword());
         if(admin.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect CC or password"));
         }else{
             return ResponseEntity.status(200).body(admin.get());
         }
@@ -138,11 +138,11 @@ public class EchoController {
     //Log in del doctor
     @PostMapping("doctor/login")
     public ResponseEntity<?> loginDoctor(@RequestBody LoginRequest loginRequest){
-        var doctor= repositoryDoctor.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
+        var doctor= repositoryDoctor.searchByLogin(loginRequest.getCC(),loginRequest.getPassword());
         if(doctor.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect CC or password"));
         }else{
-            return ResponseEntity.status(200).body(new LoginResponse("Welcome!"));
+            return ResponseEntity.status(200).body(doctor.get());
         }
     }
 
@@ -150,18 +150,18 @@ public class EchoController {
 
     @PostMapping("doctor/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-        var optionalDoctor = repositoryDoctor.searchByLogin(changePasswordRequest.getUsername(), changePasswordRequest.getPassword());
+        var optionalDoctor = repositoryDoctor.searchByLogin(changePasswordRequest.getCc(), changePasswordRequest.getPassword());
         if (optionalDoctor.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect name or password");
+            return ResponseEntity.status(401).body("Incorrect cc or password");
         } else {
             if(changePasswordRequest.getPasswordNEW1().equals(changePasswordRequest.getPasswordNEW2())){
                 Doctor doctor = optionalDoctor.get();
                 doctor.setPassword(changePasswordRequest.getPasswordNEW1());
-               repositoryDoctor.save(doctor);
+                repositoryDoctor.save(doctor);
                 return ResponseEntity.status(200).body("password changed");
             }
             else{
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Both passwords are not the same");
+                return ResponseEntity.status(402).body("Both passwords are not the same");
             }
 
         }
