@@ -1,11 +1,11 @@
 package org.example.backendproject.ResponseRequest;
 
-public class LoginRequest{
+public class LoginRequestDoctor {
 
     private String CC;
     private String password;
 
-    public LoginRequest(String CC, String password) {
+    public LoginRequestDoctor(String CC, String password) {
         this.CC = CC;
         this.password = password;
     }
