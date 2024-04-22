@@ -130,9 +130,9 @@ public class EchoController {
     //Log in del doctor
     @PostMapping("doctor/login")
     public ResponseEntity<?> loginDoctor(@RequestBody LoginRequest loginRequest){
-        var doctor= repositoryDoctor.searchByLogin(loginRequest.getUsername(),loginRequest.getPassword());
+        var doctor= repositoryDoctor.searchByLogin(loginRequest.getCC(),loginRequest.getPassword());
         if(doctor.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect name or password"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect CC or password"));
         }else{
             return ResponseEntity.status(200).body(doctor.get());
         }
@@ -142,9 +142,9 @@ public class EchoController {
 
     @PostMapping("doctor/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-        var optionalDoctor = repositoryDoctor.searchByLogin(changePasswordRequest.getUsername(), changePasswordRequest.getPassword());
+        var optionalDoctor = repositoryDoctor.searchByLogin(changePasswordRequest.getCc(), changePasswordRequest.getPassword());
         if (optionalDoctor.isEmpty()) {
-            return ResponseEntity.status(401).body("Incorrect name or password");
+            return ResponseEntity.status(401).body("Incorrect cc or password");
         } else {
             if(changePasswordRequest.getPasswordNEW1().equals(changePasswordRequest.getPasswordNEW2())){
                 Doctor doctor = optionalDoctor.get();
