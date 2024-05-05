@@ -133,11 +133,12 @@ public class EchoController {
 
         }
     }
+    //Filtrar pacientes
     @GetMapping("doctor/{doctorId}/filterPatients/{name}")
     public ResponseEntity<?> filterPatient(@PathVariable("name") String name, @PathVariable("doctorId") long doctorId) {
         var patients= repositoryPatient.filterByName(name, doctorId);
         if(patients.isEmpty()){
-            return ResponseEntity.status(200).body(new filterPatientResponse("No matches"));
+            return ResponseEntity.status(400).body(new filterPatientResponse("No matches"));
         }else{
             return ResponseEntity.status(200).body(patients);
         }
