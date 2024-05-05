@@ -4,13 +4,11 @@ package org.example.backendproject;
 import org.example.backendproject.Entity.Doctor;
 import org.example.backendproject.Entity.Patient;
 import org.example.backendproject.ResponseRequest.*;
-import org.example.backendproject.repository.DoctorRepository;
-import org.example.backendproject.repository.PatientRepository;
+import org.example.backendproject.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.example.backendproject.repository.AdminRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,13 @@ public class EchoController {
 
     @Autowired
     PatientRepository repositoryPatient;
+
+    @Autowired
+    MeditionRepository meditionRepository;
+
+    @Autowired
+    CommentsRepository commentsRepository;
+
 
     @PostMapping("doctor")
     public ResponseEntity<?> signup(@RequestBody Doctor doctor) {
@@ -142,4 +147,22 @@ public class EchoController {
             return ResponseEntity.status(200).body(patients);
         }
     }
+
+    @GetMapping("patient/medition/{cc}")
+    public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc){
+        var meditions = meditionRepository.filterByPatientCC(cc);
+        if(meditions.isEmpty()){
+            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
+        }else{
+            return ResponseEntity.status(200).body(meditions);
+        }
+
+    }
+    @GetMapping("patient/medition/comments/{medicionid}")
+    public  ResponseEntity<?> filterComments(@PathVariable("medicionid") long medicionid){
+        var comments = commentsRepository.filterByCC(medicionid);
+        return ResponseEntity.status(200).body(comments);
+
+    }
+
 }
