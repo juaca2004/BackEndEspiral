@@ -18,7 +18,12 @@ public class Medition {
 
     //Una medición puede tener muchas muestras
     @OneToMany(mappedBy = "medition")
+    private List<Comments> comments;
+
+    @OneToMany(mappedBy = "medition")
     private List<Sample> samples;
+
+
     public Medition(String dateTaken) {
         this.dateTaken = dateTaken;
     }
