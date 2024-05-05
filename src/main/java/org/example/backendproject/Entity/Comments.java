@@ -39,4 +39,12 @@ public class Comments {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Medition getMedition() {
+        return medition;
+    }
+
+    public void setMedition(Medition medition) {
+        this.medition = medition;
+    }
 }

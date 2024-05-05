@@ -1,6 +1,7 @@
 package org.example.backendproject;
 
 
+import org.example.backendproject.Entity.Comments;
 import org.example.backendproject.Entity.Doctor;
 import org.example.backendproject.Entity.Patient;
 import org.example.backendproject.ResponseRequest.*;
@@ -163,6 +164,25 @@ public class EchoController {
         var comments = commentsRepository.filterByCC(medicionid);
         return ResponseEntity.status(200).body(comments);
 
+    }
+
+    @PostMapping("patient/addmedition/{medicionid}/{comment}")
+    public ResponseEntity<?> addComment(@PathVariable("medicionid") Long meditionId, @PathVariable("comment") String comment){
+        var medition = meditionRepository.serchById(meditionId);
+
+        if (medition.isEmpty()) {
+            return ResponseEntity.status(404).body(new filterCommentsResponse("No hay medicion asociada"));
+        } else{
+            // Crear el comentario
+            Comments commentobj = new Comments();
+            commentobj.setComment(comment);
+            commentobj.setMedition(medition.get());
+
+            // Guardar el comentario
+            commentsRepository.save(commentobj);
+
+            return ResponseEntity.status(200).body(comment);
+        }
     }
 
 }

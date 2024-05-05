@@ -18,7 +18,7 @@ public class Medition {
 
     //Una medición puede tener muchas muestras
     @OneToMany(mappedBy = "medition")
-    private List<Comments> commentsList;
+    private List<Comments> comments;
 
     @OneToMany(mappedBy = "medition")
     private List<Sample> samples;
