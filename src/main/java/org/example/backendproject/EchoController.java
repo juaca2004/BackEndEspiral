@@ -2,6 +2,7 @@ package org.example.backendproject;
 
 
 import org.example.backendproject.Entity.Comments;
+import org.example.backendproject.Entity.Device;
 import org.example.backendproject.Entity.Doctor;
 import org.example.backendproject.Entity.Patient;
 import org.example.backendproject.ResponseRequest.*;
@@ -34,6 +35,8 @@ public class EchoController {
 
     @Autowired
     CommentsRepository commentsRepository;
+    @Autowired
+    DeviceRepository deviceRepository;
 
 
     @PostMapping("doctor")
@@ -178,6 +181,17 @@ public class EchoController {
             commentsRepository.save(comment);
 
             return ResponseEntity.status(200).body(comment);
+        }
+    }
+
+    @PostMapping("device/createDevice")
+    public  ResponseEntity<?> createDevice(@RequestBody Device device){
+        var d = deviceRepository.searchByName(device.getName());
+        if (d.isEmpty()) {
+            deviceRepository.save(device);
+            return ResponseEntity.status(200).body(new RegisterResponse("new device created"));
+        } else {
+            return ResponseEntity.status(409).body(new RegisterResponse("this device already exists"));
         }
     }
 

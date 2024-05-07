@@ -10,12 +10,11 @@ public class Device {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "deviceID")
+    @JoinColumn(name = "doctorID")
     private Doctor doctor;
 
 
-    public Device(Long id, String name) {
-        this.id = id;
+    public Device( String name) {
         this.name = name;
     }
 
