@@ -169,8 +169,10 @@ public class EchoController {
 
     @PostMapping("patient/addmedition/{medicionid}/{comment}")
     public ResponseEntity<?> addComment(@PathVariable("medicionid") Long meditionId, @PathVariable("comment") String comment){
+        System.out.println(meditionId);
+        System.out.println(comment);
         var medition = meditionRepository.serchById(meditionId);
-
+        System.out.println(medition);
         if (medition.isEmpty()) {
             return ResponseEntity.status(404).body(new filterCommentsResponse("No hay medicion asociada"));
         } else{
@@ -178,6 +180,7 @@ public class EchoController {
             Comments commentobj = new Comments();
             commentobj.setComment(comment);
             commentobj.setMedition(medition.get());
+
 
             // Guardar el comentario
             commentsRepository.save(commentobj);

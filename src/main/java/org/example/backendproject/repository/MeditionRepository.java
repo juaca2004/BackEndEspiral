@@ -18,4 +18,5 @@ public interface MeditionRepository extends CrudRepository<Medition, Long> {
     @Query("SELECT m FROM Medition m WHERE m.id = :meditionId")
     public Optional<Medition> serchById(@Param("meditionId") long id);
 
+
 }
