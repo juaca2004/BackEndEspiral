@@ -24,6 +24,9 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor")
     private List<Patient> patients;
 
+    @OneToMany(mappedBy = "doctor")
+    private List<Device> devices ;
+
 //    @OneToMany(mappedBy = "doctor")
 //    private List<Patients> patients; //PREGUNTARLE A DOMI! -Val
     public Doctor() {
