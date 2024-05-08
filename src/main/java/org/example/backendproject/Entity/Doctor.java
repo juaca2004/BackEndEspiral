@@ -1,4 +1,5 @@
 package org.example.backendproject.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -22,9 +23,11 @@ public class Doctor {
 
     //Se crea la relación 1 a muchos (Un doctor puede tener muchos pacientes)
     @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
     private List<Patient> patients;
 
     @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
     private List<Device> devices ;
 
 //    @OneToMany(mappedBy = "doctor")
@@ -86,4 +89,22 @@ public class Doctor {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
+    }
+
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
+
+
 }

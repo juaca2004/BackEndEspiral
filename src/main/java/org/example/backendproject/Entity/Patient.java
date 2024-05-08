@@ -1,5 +1,6 @@
 package org.example.backendproject.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -20,6 +21,7 @@ public class Patient {
     private Doctor doctor;
 
     @OneToMany(mappedBy = "patient")
+    @JsonIgnore
     private List<Medition> meditions;
 
     public Patient(Long id, String name, String cc, String phone, String email) {
@@ -72,4 +74,6 @@ public class Patient {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 }

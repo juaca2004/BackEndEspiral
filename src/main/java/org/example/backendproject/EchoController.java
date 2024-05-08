@@ -195,4 +195,25 @@ public class EchoController {
         }
     }
 
+    @GetMapping("device/list")
+    public ArrayList<Device> listDevice() {
+        return (ArrayList<Device>) deviceRepository.findAll();
+
+    }
+
+    @PostMapping("device/AssignDevice/{ccDoctor}")
+    public ResponseEntity<?> assignDevice(@PathVariable("ccDoctor") String ccDoctor,@RequestBody Device device){
+        var  d = repositoryDoctor.searchByCc(ccDoctor);
+
+        if(d.isEmpty()){
+            return ResponseEntity.status(404).body(new filterCommentsResponse("No existe el doctor"));
+        }else{
+            device.setDoctor(d.get());
+            deviceRepository.save(device);
+            Doctor doctor =d.get();
+            doctor.getDevices().add(device);
+            repositoryDoctor.save(doctor);
+            return ResponseEntity.status(200).body(device);
+        }
+    }
 }

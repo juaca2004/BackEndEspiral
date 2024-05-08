@@ -1,5 +1,6 @@
 package org.example.backendproject.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,9 +19,11 @@ public class Medition {
 
     //Una medición puede tener muchas muestras
     @OneToMany(mappedBy = "medition")
+    @JsonIgnore
     private List<Comments> comments;
 
     @OneToMany(mappedBy = "medition")
+    @JsonIgnore
     private List<Sample> samples;
 
 
