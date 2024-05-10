@@ -178,7 +178,9 @@ public class EchoController {
             return ResponseEntity.status(404).body(new filterCommentsResponse("No hay medicion asociada"));
         } else{
             comment.setMedition(medition.get());
+            medition.get().getComments().add(comment);
             commentsRepository.save(comment);
+            meditionRepository.save(medition.get());
 
             return ResponseEntity.status(200).body(comment);
         }
