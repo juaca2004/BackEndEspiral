@@ -143,7 +143,7 @@ public class EchoController {
 
         }
     }
-    //Filtrar pacientes
+    //Filtrar pacientes de un doctor
     @GetMapping("doctor/{doctorId}/filterPatients/{name}")
     public ResponseEntity<?> filterPatient(@PathVariable("name") String name, @PathVariable("doctorId") long doctorId) {
         var patients= repositoryPatient.filterByName(name, doctorId);
@@ -153,6 +153,18 @@ public class EchoController {
             return ResponseEntity.status(200).body(patients);
         }
     }
+
+    //Filtrar pacientes de la base de datos
+    @GetMapping("doctor/filterPatients/{name}")
+    public ResponseEntity<?> filterPatient(@PathVariable("name") String name) {
+        var patients= repositoryPatient.filterByNameInDatabase(name);
+        if(patients.isEmpty()){
+            return ResponseEntity.status(400).body(new filterPatientResponse("No matches"));
+        }else{
+            return ResponseEntity.status(200).body(patients);
+        }
+    }
+
 
     @GetMapping("patient/medition/{cc}")
     public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc){
@@ -219,9 +231,9 @@ public class EchoController {
             return ResponseEntity.status(200).body(device);
         }
     }
-        @PostMapping("doctor/{doctorId}/patient/{patientId}/modify")
-    public ResponseEntity<?> modifyPatients(@PathVariable("doctorId") long doctorId, @PathVariable("patientId") long patientId, @RequestBody Patient modifiedPatient){
-        var patientFound = repositoryPatient.getPatient(patientId,doctorId);
+    @PostMapping("doctor/patient/{patientId}/modify")
+    public ResponseEntity<?> modifyPatients(@PathVariable("patientId") long patientId, @RequestBody Patient modifiedPatient){
+        var patientFound = repositoryPatient.getPatient(patientId);
         if(patientFound.isPresent()){
             Patient p = patientFound.get();
             p.setName(modifiedPatient.getName());
