@@ -48,4 +48,28 @@ public class Medition {
     public Long getId() {
         return id;
     }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public List<Comments> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comments> comments) {
+        this.comments = comments;
+    }
+
+    public List<Sample> getSamples() {
+        return samples;
+    }
+
+    public void setSamples(List<Sample> samples) {
+        this.samples = samples;
+    }
 }

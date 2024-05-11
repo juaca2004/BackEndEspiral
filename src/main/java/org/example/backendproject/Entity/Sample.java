@@ -65,4 +65,12 @@ public class Sample {
     public Long getId() {
         return id;
     }
+
+    public Medition getMedition() {
+        return medition;
+    }
+
+    public void setMedition(Medition medition) {
+        this.medition = medition;
+    }
 }

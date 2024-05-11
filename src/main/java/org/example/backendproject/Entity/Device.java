@@ -9,6 +9,8 @@ public class Device {
 
     private String name;
 
+    private boolean measuring = false;
+
     @ManyToOne
     @JoinColumn(name = "doctorID")
     private Doctor doctor;
@@ -43,5 +45,13 @@ public class Device {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public boolean isMeasuring() {
+        return measuring;
+    }
+
+    public void setMeasuring(boolean measuring) {
+        this.measuring = measuring;
     }
 }
