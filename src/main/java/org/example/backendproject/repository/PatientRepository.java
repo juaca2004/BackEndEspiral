@@ -11,8 +11,14 @@ import java.util.Optional;
 public interface PatientRepository extends CrudRepository<Patient,Long> {
     @Query("SELECT p FROM Patient p WHERE p.name =:name AND p.doctor.id=:doctorId")
     public List<Patient> filterByName(@Param("name") String name, @Param("doctorId") long doctorId);
+
+    @Query("SELECT p FROM Patient p WHERE p.name like %:name%")
+    public List<Patient> filterByNameInDatabase(@Param("name") String name);
+
+    //Modificacion de paciente
+    @Query("SELECT p FROM Patient p WHERE p.id=:id")
+    public Optional<Patient> getPatient(@Param("id") long id);
     @Query("SELECT p FROM Patient p WHERE p.cc =:cc")
     public Optional<Patient> searchByCc(@Param("cc") String cc);
-
 
 }
