@@ -5,8 +5,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PatientRepository extends CrudRepository<Patient,Long> {
     @Query("SELECT p FROM Patient p WHERE p.name =:name AND p.doctor.id=:doctorId")
     public List<Patient> filterByName(@Param("name") String name, @Param("doctorId")long doctorId);
+
+    @Query("SELECT p FROM Patient p WHERE p.id=:id AND p.doctor.id=:doctorId")
+    public Optional<Patient> getPatient(@Param("id") long id, @Param("doctorId") long doctorId);
+
 }

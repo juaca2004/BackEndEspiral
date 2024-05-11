@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -214,6 +215,22 @@ public class EchoController {
             doctor.getDevices().add(device);
             repositoryDoctor.save(doctor);
             return ResponseEntity.status(200).body(device);
+        }
+    }
+        @PostMapping("doctor/{doctorId}/patient/{patientId}/modify")
+    public ResponseEntity<?> modifyPatients(@PathVariable("doctorId") long doctorId, @PathVariable("patientId") long patientId, @RequestBody Patient modifiedPatient){
+        var patientFound = repositoryPatient.getPatient(patientId,doctorId);
+        if(patientFound.isPresent()){
+            Patient p = patientFound.get();
+            p.setName(modifiedPatient.getName());
+            p.setCc(modifiedPatient.getCc());
+            p.setEmail(modifiedPatient.getEmail());
+            p.setPhone(modifiedPatient.getPhone());
+            repositoryPatient.save(p);
+            return ResponseEntity.status(200).body(new ModifyPatientRequest("Patient modified correctly"));
+        }
+        else{
+            return ResponseEntity.status(400).body(new ModifyPatientRequest("Problem"));
         }
     }
 }
