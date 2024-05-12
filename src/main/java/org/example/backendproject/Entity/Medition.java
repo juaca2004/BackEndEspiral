@@ -3,6 +3,7 @@ package org.example.backendproject.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -10,7 +11,7 @@ public class Medition {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String dateTaken;
+    private Date dateTaken;
 
     //Muchas mediciones pueden ser de un paciente
     @ManyToOne()
@@ -27,17 +28,17 @@ public class Medition {
     private List<Sample> samples;
 
 
-    public Medition(String dateTaken) {
+    public Medition(Date dateTaken) {
         this.dateTaken = dateTaken;
     }
     public Medition() {
     }
 
-    public String getDateTaken() {
+    public Date getDateTaken() {
         return dateTaken;
     }
 
-    public void setDateTaken(String dateTaken) {
+    public void setDateTaken(Date dateTaken) {
         this.dateTaken = dateTaken;
     }
 

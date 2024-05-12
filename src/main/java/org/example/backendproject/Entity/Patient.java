@@ -75,5 +75,11 @@ public class Patient {
         this.email = email;
     }
 
+    public List<Medition> getMeditions() {
+        return meditions;
+    }
 
+    public void setMeditions(List<Medition> meditions) {
+        this.meditions = meditions;
+    }
 }

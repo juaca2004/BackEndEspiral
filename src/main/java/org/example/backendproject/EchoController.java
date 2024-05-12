@@ -1,10 +1,7 @@
 package org.example.backendproject;
 
 
-import org.example.backendproject.Entity.Comments;
-import org.example.backendproject.Entity.Device;
-import org.example.backendproject.Entity.Doctor;
-import org.example.backendproject.Entity.Patient;
+import org.example.backendproject.Entity.*;
 import org.example.backendproject.ResponseRequest.*;
 import org.example.backendproject.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -143,53 +141,42 @@ public class EchoController {
 
         }
     }
+
     //Filtrar pacientes de un doctor
     @GetMapping("doctor/{doctorId}/filterPatients/{name}")
     public ResponseEntity<?> filterPatient(@PathVariable("name") String name, @PathVariable("doctorId") long doctorId) {
-        var patients= repositoryPatient.filterByName(name, doctorId);
-        if(patients.isEmpty()){
+        var patients = repositoryPatient.filterByName(name, doctorId);
+        if (patients.isEmpty()) {
             return ResponseEntity.status(400).body(new filterPatientResponse("No matches"));
-        }else{
+        } else {
             return ResponseEntity.status(200).body(patients);
         }
     }
-
-    //Filtrar pacientes de la base de datos
-    @GetMapping("doctor/filterPatients/{name}")
-    public ResponseEntity<?> filterPatient(@PathVariable("name") String name) {
-        var patients= repositoryPatient.filterByNameInDatabase(name);
-        if(patients.isEmpty()){
-            return ResponseEntity.status(400).body(new filterPatientResponse("No matches"));
-        }else{
-            return ResponseEntity.status(200).body(patients);
-        }
-    }
-
-
     @GetMapping("patient/medition/{cc}")
-    public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc){
+    public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc) {
         var meditions = meditionRepository.filterByPatientCC(cc);
-        if(meditions.isEmpty()){
+        if (meditions.isEmpty()) {
             return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
-        }else{
+        } else {
             return ResponseEntity.status(200).body(meditions);
         }
 
     }
+
     @GetMapping("patient/medition/comments/{medicionid}")
-    public  ResponseEntity<?> filterComments(@PathVariable("medicionid") long medicionid){
+    public ResponseEntity<?> filterComments(@PathVariable("medicionid") long medicionid) {
         var comments = commentsRepository.filterByCC(medicionid);
         return ResponseEntity.status(200).body(comments);
 
     }
 
     @PostMapping("patient/addmedition/{medicionid}")
-    public ResponseEntity<?> addComment(@PathVariable("medicionid") Long meditionId, @RequestBody Comments comment){
+    public ResponseEntity<?> addComment(@PathVariable("medicionid") Long meditionId, @RequestBody Comments comment) {
         var medition = meditionRepository.serchById(meditionId);
         System.out.println(medition);
         if (medition.isEmpty()) {
             return ResponseEntity.status(404).body(new filterCommentsResponse("No hay medicion asociada"));
-        } else{
+        } else {
             comment.setMedition(medition.get());
             medition.get().getComments().add(comment);
             commentsRepository.save(comment);
@@ -200,7 +187,7 @@ public class EchoController {
     }
 
     @PostMapping("device/createDevice")
-    public  ResponseEntity<?> createDevice(@RequestBody Device device){
+    public ResponseEntity<?> createDevice(@RequestBody Device device) {
         var d = deviceRepository.searchByName(device.getName());
         if (d.isEmpty()) {
             deviceRepository.save(device);
@@ -217,34 +204,66 @@ public class EchoController {
     }
 
     @PostMapping("device/AssignDevice/{ccDoctor}")
-    public ResponseEntity<?> assignDevice(@PathVariable("ccDoctor") String ccDoctor,@RequestBody Device device){
-        var  d = repositoryDoctor.searchByCc(ccDoctor);
+    public ResponseEntity<?> assignDevice(@PathVariable("ccDoctor") String ccDoctor, @RequestBody Device device) {
+        var d = repositoryDoctor.searchByCc(ccDoctor);
 
-        if(d.isEmpty()){
+        if (d.isEmpty()) {
             return ResponseEntity.status(404).body(new filterCommentsResponse("No existe el doctor"));
-        }else{
+        } else {
             device.setDoctor(d.get());
             deviceRepository.save(device);
-            Doctor doctor =d.get();
+            Doctor doctor = d.get();
             doctor.getDevices().add(device);
             repositoryDoctor.save(doctor);
             return ResponseEntity.status(200).body(device);
         }
     }
+
     @PostMapping("doctor/patient/{patientId}/modify")
-    public ResponseEntity<?> modifyPatients(@PathVariable("patientId") long patientId, @RequestBody Patient modifiedPatient){
+    public ResponseEntity<?> modifyPatients(@PathVariable("patientId") long patientId, @RequestBody Patient modifiedPatient) {
         var patientFound = repositoryPatient.getPatient(patientId);
-        if(patientFound.isPresent()){
+        if (patientFound.isPresent()) {
             Patient p = patientFound.get();
             p.setName(modifiedPatient.getName());
-            p.setCc(modifiedPatient.getCc());
             p.setEmail(modifiedPatient.getEmail());
             p.setPhone(modifiedPatient.getPhone());
             repositoryPatient.save(p);
             return ResponseEntity.status(200).body(new ModifyPatientRequest("Patient modified correctly"));
+        } else {
+            return ResponseEntity.status(400).body(new ModifyPatientRequest("Problem"));
+        }
+    }
+    //Filtrado de mediciones de los pacientes (por CC) -> Solo pacientes asociados al doctor
+    @GetMapping("doctor/{doctorId}/measurement/filterByCC/{patientCC}")
+    public ResponseEntity<?> filterMeasurementByPatientName(@PathVariable("patientCC") String patientCC, @PathVariable("doctorId") long doctorId) {
+        List<Medition> meditionsFiltered= meditionRepository.searchByPatientCC(doctorId,patientCC);
+        if(meditionsFiltered.isEmpty()){
+            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
         }
         else{
-            return ResponseEntity.status(400).body(new ModifyPatientRequest("Problem"));
+            return ResponseEntity.status(200).body(meditionsFiltered);
+        }
+    }
+
+    //Filtrado de mediciones de los pacientes (por nombre) -> Solo pacientes asociados al doctor
+    @GetMapping("doctor/{doctorId}/measurement/filterByName/{patientName}")
+    public ResponseEntity<?> filterPatientsByName(@PathVariable("patientName") String patientName, @PathVariable("doctorId") long doctorId) {
+        List<Medition> meditionsFiltered = meditionRepository.filterByPatientName(patientName, doctorId);
+        if(meditionsFiltered.isEmpty()){
+            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
+        }
+        else{
+            return ResponseEntity.status(200).body(meditionsFiltered);
+        }
+    }
+    //Filtrado de mediciones de los pacientes de un doctor (por fecha)  -> Solo pacientes asociados al doctor
+    @GetMapping("doctor/{doctorId}/measurement/filterByDate/{dateA}/{dateB}")
+    public ResponseEntity<?> filterMeasurementByDate(@PathVariable("dateA") Date dateA, @PathVariable("dateB") Date dateB, @PathVariable("doctorId") long doctorid) {
+        List<Medition> meditionsFiltered = meditionRepository.filterByDate(dateA, dateB, doctorid);
+        if (meditionsFiltered.isEmpty()) {
+            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
+        } else {
+            return ResponseEntity.status(200).body(meditionsFiltered);
         }
     }
 }
