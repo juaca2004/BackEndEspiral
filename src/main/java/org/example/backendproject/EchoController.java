@@ -152,15 +152,20 @@ public class EchoController {
             return ResponseEntity.status(200).body(patients);
         }
     }
-    @GetMapping("patient/medition/{cc}")
-    public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc) {
-        var meditions = meditionRepository.filterByPatientCC(cc);
-        if (meditions.isEmpty()) {
-            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
-        } else {
-            return ResponseEntity.status(200).body(meditions);
-        }
+    @GetMapping("patient/medition/{cc}/{doctorId}")
+    public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc,@PathVariable("doctorId") long doctorId) {
+        var patient = repositoryPatient.filterByCC(cc, doctorId);
 
+        if(patient.isEmpty()){
+            return ResponseEntity.status(400).body(new filterPatientResponse("No matches in patient for doctor"));
+        }else{
+            var meditions = meditionRepository.filterByPatientCC(cc);
+            if (meditions.isEmpty()) {
+                return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches in medition for patient"));
+            } else {
+                return ResponseEntity.status(200).body(meditions);
+            }
+        }
     }
 
     @GetMapping("patient/medition/comments/{medicionid}")

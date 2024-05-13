@@ -12,6 +12,9 @@ public interface PatientRepository extends CrudRepository<Patient,Long> {
     @Query("SELECT p FROM Patient p WHERE p.name like %:name% AND p.doctor.id=:doctorId")
     public List<Patient> filterByName(@Param("name") String name, @Param("doctorId")long doctorId);
 
+    @Query("SELECT p FROM Patient p WHERE p.cc like :cc AND p.doctor.id=:doctorId")
+    public Optional<Patient>  filterByCC(@Param("cc") String cc, @Param("doctorId")long doctorId);
+
     //Modificacion de paciente
     @Query("SELECT p FROM Patient p WHERE p.id=:id")
     public Optional<Patient> getPatient(@Param("id") long id);
