@@ -391,4 +391,28 @@ public class EchoController {
             return ResponseEntity.status(200).body(meditionsFiltered);
         }
     }
+
+    @GetMapping("doctor/patient/medition/{meditionid}")
+    public ResponseEntity<?> getSamplesforMedition(@PathVariable("meditionid") Long meditionId){
+       List<Sample> samples =sampleRepository.findByMeditionId(meditionId);
+
+       if(samples.isEmpty()){
+           return  ResponseEntity.status(404).body(new SamplesResponse("No Samples for this medition"));
+       } else{
+           double[] magnitudes = new double[samples.size()];
+           long[] times = new long[samples.size()];
+
+           for (int i = 0; i < samples.size(); i++) {
+               Sample sample = samples.get(i);
+               double magnitude = Math.sqrt(Math.pow(sample.getPosX(), 2) + Math.pow(sample.getPosY(), 2) + Math.pow(sample.getPosZ(), 2));
+               magnitudes[i] = magnitude;
+               times[i] = sample.getTime();
+           }
+
+           MagnitudesAndTime magnitudesAndTimes = new MagnitudesAndTime(magnitudes, times);
+           return ResponseEntity.status(200).body(magnitudesAndTimes);
+
+       }
+
+    }
 }
