@@ -6,6 +6,7 @@ import org.example.backendproject.Entity.Medition;
 @Entity
 public class Sample {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     int time;
     int posX;
@@ -64,5 +65,13 @@ public class Sample {
 
     public Long getId() {
         return id;
+    }
+
+    public Medition getMedition() {
+        return medition;
+    }
+
+    public void setMedition(Medition medition) {
+        this.medition = medition;
     }
 }
