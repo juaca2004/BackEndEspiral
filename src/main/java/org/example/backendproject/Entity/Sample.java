@@ -6,6 +6,7 @@ import org.example.backendproject.Entity.Medition;
 @Entity
 public class Sample {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     int time;
     int posX;

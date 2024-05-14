@@ -271,20 +271,37 @@ public class EchoController {
         }
     }
 
-    @PostMapping("device/{xd}/{idmedition}/measure")
-    public ResponseEntity<?> receiveMeasurement(@RequestBody Sample sampleRequest,@PathVariable("idmedition") long idmedition) {
-        Sample sample = new Sample();
-        sample.setPosX(sampleRequest.getPosX());
-        sample.setPosY(sampleRequest.getPosY());
-        sample.setPosZ(sampleRequest.getPosZ());
-        sample.setTime(sampleRequest.getTime());
-        Medition medition=meditionRepository.serchById(idmedition).get();
-        sample.setMedition(medition);
-        medition.getSamples().add(sample);
-        meditionRepository.save(medition);
-        sampleRepository.save(sample);
-        return ResponseEntity.ok("Measurement received and saved");
+
+
+    @PostMapping("device/{idMedition}/measure")
+    public ResponseEntity<?> receiveMeasurement(@RequestBody List<Sample> sampleRequestList, @PathVariable("idMedition") long idMedition) {
+        // Loop through the received samples
+        System.out.println("llegue");
+
+        for (Sample sampleRequest : sampleRequestList) {
+            Sample sample = new Sample();
+            sample.setPosX(sampleRequest.getPosX());
+            sample.setPosY(sampleRequest.getPosY());
+            sample.setPosZ(sampleRequest.getPosZ());
+            sample.setTime(sampleRequest.getTime());
+
+            // Assuming Medition class has a method to find by ID
+            Medition medition = meditionRepository.serchById(idMedition).orElse(null);
+            if (medition == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medition not found");
+            }
+
+            sample.setMedition(medition);
+            medition.getSamples().add(sample);
+
+            // Save the changes
+            meditionRepository.save(medition);
+            sampleRepository.save(sample);
+        }
+
+        return ResponseEntity.ok("Measurements received and saved");
     }
+
 
     @PostMapping("device/{NameDevice}/startMedition")
     public ResponseEntity<?> startMeasure(@PathVariable("NameDevice") String name) {
