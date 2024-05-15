@@ -18,6 +18,8 @@ public interface DoctorRepository extends CrudRepository<Doctor,Long> {
     @Query("SELECT u FROM Doctor u WHERE u.cc =:cc")
     public Optional<Doctor>searchByCc(@Param("cc") String cc);
 
+
+
     @Override
     void delete(Doctor doctor);
 

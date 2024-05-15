@@ -169,6 +169,17 @@ public class EchoController {
             }
         }
     }
+    @GetMapping("patient/medition/getDevice/{id}/{deviceValue}")
+    public ResponseEntity<?> FiltrerDevice(@PathVariable("id") long id,@PathVariable("deviceValue") String deviceValue) {
+        var d = deviceRepository.filterByName(deviceValue, id);
+        if(d.isEmpty()){
+            return ResponseEntity.status(400).body(new filterDeviceResponse("No matches in device for doctor"));
+        }else{
+            Device device= d.get();
+            return ResponseEntity.status(200).body(device);
+        }
+    }
+
 
     @GetMapping("patient/medition/comments/{medicionid}")
     public ResponseEntity<?> filterComments(@PathVariable("medicionid") long medicionid) {
