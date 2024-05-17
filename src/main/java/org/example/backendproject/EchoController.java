@@ -94,10 +94,10 @@ public class EchoController {
         if (doctor.isPresent()) {
             Doctor doctorFound = doctor.get();
             repositoryDoctor.delete(doctorFound);
-            System.out.println("doctor eliminado correctamente so");
+            System.out.println("doctor correctly removed so");
             return ResponseEntity.status(200).body(doctorFound);
         } else {
-            return ResponseEntity.status(400).body(new DeleteRequest("Usuario no encontrado"));
+            return ResponseEntity.status(400).body(new DeleteRequest("The user isnot found"));
         }
 
     }
@@ -181,19 +181,19 @@ public class EchoController {
     }
 
 
-    @GetMapping("patient/medition/comments/{medicionid}")
-    public ResponseEntity<?> filterComments(@PathVariable("medicionid") long medicionid) {
-        var comments = commentsRepository.filterByMeditionId(medicionid);
+    @GetMapping("patient/medition/comments/{meditionid}")
+    public ResponseEntity<?> filterComments(@PathVariable("meditionid") long meditionid) {
+        var comments = commentsRepository.filterByMeditionId(meditionid);
         return ResponseEntity.status(200).body(comments);
 
     }
 
-    @PostMapping("patient/addmedition/{medicionid}")
-    public ResponseEntity<?> addComment(@PathVariable("medicionid") Long meditionId, @RequestBody Comments comment) {
+    @PostMapping("patient/addmedition/{meditionid}")
+    public ResponseEntity<?> addComment(@PathVariable("meditionid") Long meditionId, @RequestBody Comments comment) {
         var medition = meditionRepository.serchById(meditionId);
         System.out.println(medition);
         if (medition.isEmpty()) {
-            return ResponseEntity.status(404).body(new filterCommentsResponse("No hay medicion asociada"));
+            return ResponseEntity.status(404).body(new filterCommentsResponse("There is no associated medication"));
         } else {
             comment.setMedition(medition.get());
             medition.get().getComments().add(comment);
