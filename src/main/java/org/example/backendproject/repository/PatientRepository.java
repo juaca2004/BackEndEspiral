@@ -28,5 +28,4 @@ public interface PatientRepository extends CrudRepository<Patient,Long> {
     @Query("SELECT p FROM Patient p WHERE p.cc =:cc")
     public Optional<Patient> searchByCc(@Param("cc") String cc);
 
-
 }
