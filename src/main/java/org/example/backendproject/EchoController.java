@@ -408,6 +408,7 @@ public class EchoController {
        List<Sample> samples =sampleRepository.findByMeditionId(meditionId);
 
        if(samples.isEmpty()){
+           System.out.println("nooooooo");
            return  ResponseEntity.status(404).body(new SamplesResponse("No Samples for this medition"));
        } else{
            double[] magnitudes = new double[samples.size()];
