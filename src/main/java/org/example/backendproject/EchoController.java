@@ -3,6 +3,7 @@ package org.example.backendproject;
 
 import org.example.backendproject.Entity.*;
 import org.example.backendproject.ResponseRequest.*;
+import org.example.backendproject.Unity.DFTUtils;
 import org.example.backendproject.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -172,7 +172,7 @@ public class EchoController {
 
     @GetMapping("patient/medition/comments/{medicionid}")
     public ResponseEntity<?> filterComments(@PathVariable("medicionid") long medicionid) {
-        var comments = commentsRepository.filterByCC(medicionid);
+        var comments = commentsRepository.filterByMeditionId(medicionid);
         return ResponseEntity.status(200).body(comments);
 
     }
@@ -405,12 +405,18 @@ public class EchoController {
            for (int i = 0; i < samples.size(); i++) {
                Sample sample = samples.get(i);
                double magnitude = Math.sqrt(Math.pow(sample.getPosX(), 2) + Math.pow(sample.getPosY(), 2) + Math.pow(sample.getPosZ(), 2));
+
                magnitudes[i] = magnitude;
                times[i] = sample.getTime();
            }
 
-           MagnitudesAndTime magnitudesAndTimes = new MagnitudesAndTime(magnitudes, times);
-           return ResponseEntity.status(200).body(magnitudesAndTimes);
+           magnitudes = DFTUtils.normalize(magnitudes);
+           double[] spectrum = DFTUtils.dftSpectrum(magnitudes);
+           double[] freqs = DFTUtils.dftFreq(magnitudes, 50);
+
+           ArraysGraphics arraysGraphics = new ArraysGraphics(magnitudes, times,spectrum,freqs);
+
+           return ResponseEntity.status(200).body(arraysGraphics);
 
        }
 

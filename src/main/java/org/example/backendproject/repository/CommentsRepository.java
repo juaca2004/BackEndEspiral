@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface CommentsRepository extends CrudRepository<Comments,Long> {
     @Query("SELECT c FROM Comments c WHERE c.medition.id=:meditionid")
-    public List<Comments> filterByCC(@Param("meditionid") long meditionid);
+    public List<Comments> filterByMeditionId(@Param("meditionid") long meditionid);
 
 }
 
