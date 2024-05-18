@@ -17,12 +17,12 @@ public class Medition {
     @JoinColumn(name = "PatientID")
     private Patient patient;
 
-    //Una medición puede tener muchas muestras
-    @OneToMany(mappedBy = "medition")
+    // Relación uno a muchos con eliminación en cascada
+    @OneToMany(mappedBy = "medition", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Comments> comments;
 
-    @OneToMany(mappedBy = "medition")
+    @OneToMany(mappedBy = "medition", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Sample> samples;
 

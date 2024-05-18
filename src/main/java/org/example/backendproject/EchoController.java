@@ -39,6 +39,13 @@ public class EchoController {
     @Autowired
     DeviceRepository deviceRepository;
 
+    @Autowired
+    DoctorRepository doctorRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
+
+
 
     @PostMapping("doctor")
     public ResponseEntity<?> signup(@RequestBody Doctor doctor) {
@@ -247,4 +254,32 @@ public class EchoController {
             return ResponseEntity.status(400).body(new ModifyPatientRequest("Problem"));
         }
     }
+
+    // Endpoint para eliminar un paciente por parte de un doctor
+    @DeleteMapping("/doctors/{doctorId}/patients/{patientId}")
+    public ResponseEntity<String> deletePatientByDoctor(@PathVariable Long doctorId, @PathVariable Long patientId) {
+        // Buscar al paciente en la base de datos
+        Optional<Patient> optionalPatient = patientRepository.findById(patientId);
+        if (optionalPatient.isPresent()) {
+            Patient patient = optionalPatient.get();
+            // Verificar si el paciente está asociado al doctor
+            Optional<Doctor> optionalDoctor = patientRepository.findDoctorByPatientId(patientId);
+            if (optionalDoctor.isPresent()) {
+                Doctor doctor = optionalDoctor.get();
+                // Verificar si el paciente está asociado al doctor con el ID proporcionado
+                if (doctor.getId().equals(doctorId)) {
+                    // Eliminar al paciente
+                    patientRepository.delete(patient);
+                    return ResponseEntity.noContent().build();
+                } else {
+                    return ResponseEntity.status(403).body("El paciente no está asociado a este doctor.");
+                }
+            } else {
+                return ResponseEntity.status(404).body("Doctor no encontrado para este paciente.");
+            }
+        } else {
+            return ResponseEntity.status(404).body("Paciente no encontrado.");
+        }
+    }
 }
+

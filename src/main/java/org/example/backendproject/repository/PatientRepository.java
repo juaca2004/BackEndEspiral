@@ -1,4 +1,5 @@
 package org.example.backendproject.repository;
+import org.example.backendproject.Entity.Doctor;
 import org.example.backendproject.Entity.Patient;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,4 +19,6 @@ public interface PatientRepository extends CrudRepository<Patient,Long> {
     @Query("SELECT p FROM Patient p WHERE p.id=:id")
     public Optional<Patient> getPatient(@Param("id") long id);
 
+    @Query("SELECT p From Doctor p WHERE P.id=:id")
+    public Optional<Doctor> findDoctorByPatientId(Long patientId);
 }
