@@ -30,8 +30,6 @@ public class Doctor {
     @JsonIgnore
     private List<Device> devices ;
 
-//    @OneToMany(mappedBy = "doctor")
-//    private List<Patients> patients; //PREGUNTARLE A DOMI! -Val
     public Doctor() {
     }
     

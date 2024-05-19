@@ -74,6 +74,21 @@ public class EchoController {
         }
     }
 
+    @PostMapping("patient/create/{doctorId}")
+    public ResponseEntity<?> createPatient(@PathVariable("doctorId") long doctorId, @RequestBody Patient patient) {
+        var p = repositoryPatient.searchByCc(patient.getCc());
+        var d= repositoryDoctor.getDoctor(doctorId);
+        if (p.isEmpty() || d.isPresent()) { //Es pq nao encontro a nadie con la misma cedula
+            Doctor doctor= d.get();
+            patient.setDoctor(doctor);
+            doctor.getPatients().add(patient);
+            repositoryPatient.save(patient);
+            return ResponseEntity.status(200).body(new RegisterResponse("Nuevo paciente creado"));
+        } else {
+            return ResponseEntity.status(409).body(new RegisterResponse("El paciente ya existe en el sistema"));
+        }
+    }
+
     //Buscar doctores
     @GetMapping("doctor/search/{cc}")
     public ResponseEntity<?> searchDoctor(@PathVariable("cc") String cc) {
