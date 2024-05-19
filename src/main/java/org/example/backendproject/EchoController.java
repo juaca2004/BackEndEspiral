@@ -169,6 +169,17 @@ public class EchoController {
             return ResponseEntity.status(200).body(patients);
         }
     }
+    @GetMapping("doctor/{doctorId}/searchPatients/{cc}")
+    public ResponseEntity<?> searchPatients(@PathVariable("cc") String cc, @PathVariable("doctorId") long doctorId){
+        var p = repositoryPatient.filterByCC(cc, doctorId);
+        if(p.isEmpty()){
+            return ResponseEntity.status(400).body(new filterPatientResponse("No matches in patient for doctor"));
+        }else {
+            return ResponseEntity.status(200).body(p);
+        }
+
+    }
+
     @GetMapping("patient/medition/{cc}/{doctorId}")
     public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc,@PathVariable("doctorId") long doctorId) {
         var patient = repositoryPatient.filterByCC(cc, doctorId);
