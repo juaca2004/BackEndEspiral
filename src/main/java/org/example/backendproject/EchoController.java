@@ -101,6 +101,22 @@ public class EchoController {
         }
 
     }
+    @DeleteMapping("doctor/deleteMedition/{meditionId}")
+    public ResponseEntity<?> deleteMedition(@PathVariable("meditionId") long meditionId){
+        var m = meditionRepository.serchById(meditionId);
+        if(m.isPresent()){
+            Medition medition = m.get();
+            Patient patient= medition.getPatient();
+            if (patient != null) {
+                patient.getMeditions().remove(medition);
+                repositoryPatient.save(patient);
+            }
+            meditionRepository.delete(medition);
+            return ResponseEntity.status(200).body("Medition deleted");
+        }else{
+            return ResponseEntity.status(400).body("Medition inexistent");
+        }
+    }
 
     //Eliminar doctores
     @DeleteMapping("doctor/delete/{cc}")
@@ -112,7 +128,7 @@ public class EchoController {
             System.out.println("doctor correctly removed so");
             return ResponseEntity.status(200).body(doctorFound);
         } else {
-            return ResponseEntity.status(400).body(new DeleteRequest("The user isnot found"));
+            return ResponseEntity.status(400).body(new DeleteRequest("The user is not found"));
         }
 
     }

@@ -26,4 +26,6 @@ public interface MeditionRepository extends CrudRepository<Medition, Long> {
     @Query("SELECT m FROM Medition m WHERE m.patient.doctor.id = :idDoctor and m.patient.cc =:patientCC")
     List<Medition> searchByPatientCC(@Param("idDoctor") long idDoctor,@Param("patientCC") String patientCC);
 
+    @Override
+    void delete(Medition medition);
 }

@@ -23,7 +23,7 @@ public class Medition {
     @JsonIgnore
     private List<Comments> comments;
 
-    @OneToMany(mappedBy = "medition")
+    @OneToMany(mappedBy = "medition", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Sample> samples;
 

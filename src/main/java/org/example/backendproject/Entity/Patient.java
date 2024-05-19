@@ -20,7 +20,7 @@ public class Patient {
     @JoinColumn(name = "DoctorID")
     private Doctor doctor;
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Medition> meditions;
 
