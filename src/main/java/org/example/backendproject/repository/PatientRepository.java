@@ -24,8 +24,7 @@ public interface PatientRepository extends CrudRepository<Patient,Long> {
     //Modificacion de paciente
     @Query("SELECT p FROM Patient p WHERE p.id=:id")
     public Optional<Patient> getPatient(@Param("id") long id);
-    @Query("SELECT p From Doctor p WHERE P.id=:id")
-    public Optional<Doctor> findDoctorByPatientId(Long patientId);
+
     @Query("SELECT p FROM Patient p WHERE p.cc =:cc")
     public Optional<Patient> searchByCc(@Param("cc") String cc);
 

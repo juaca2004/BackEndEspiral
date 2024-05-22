@@ -427,7 +427,7 @@ public class EchoController {
         Optional<Patient> optionalPatient = patientRepository.findById(patientId);
         if (optionalPatient.isPresent()) {
             // Verificar si el paciente está asociado al doctor
-            Optional<Doctor> optionalDoctor = patientRepository.findDoctorByPatientId(patientId);
+            Optional<Doctor> optionalDoctor = doctorRepository.getDoctor(doctorId);
             if (optionalDoctor.isPresent()) {
                 Doctor doctor = optionalDoctor.get();
                 // Verificar si el paciente está asociado al doctor con el ID proporcionado
