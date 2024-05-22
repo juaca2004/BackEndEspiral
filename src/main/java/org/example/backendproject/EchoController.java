@@ -257,11 +257,10 @@ public class EchoController {
 
     // Endpoint para eliminar un paciente por parte de un doctor
     @DeleteMapping("/doctors/{doctorId}/patients/{patientId}")
-    public ResponseEntity<String> deletePatientByDoctor(@PathVariable Long doctorId, @PathVariable Long patientId) {
+    public ResponseEntity<?> deletePatientByDoctor(@PathVariable Long doctorId, @PathVariable Long patientId) {
         // Buscar al paciente en la base de datos
         Optional<Patient> optionalPatient = patientRepository.findById(patientId);
         if (optionalPatient.isPresent()) {
-            Patient patient = optionalPatient.get();
             // Verificar si el paciente está asociado al doctor
             Optional<Doctor> optionalDoctor = patientRepository.findDoctorByPatientId(patientId);
             if (optionalDoctor.isPresent()) {
@@ -269,17 +268,21 @@ public class EchoController {
                 // Verificar si el paciente está asociado al doctor con el ID proporcionado
                 if (doctor.getId().equals(doctorId)) {
                     // Eliminar al paciente
-                    patientRepository.delete(patient);
-                    return ResponseEntity.noContent().build();
+                    patientRepository.delete(optionalPatient.get());
+                    return ResponseEntity.status(204).build();
                 } else {
                     return ResponseEntity.status(403).body("El paciente no está asociado a este doctor.");
                 }
             } else {
-                return ResponseEntity.status(404).body("Doctor no encontrado para este paciente.");
+                // Aquí eliminamos el mensaje "Doctor no encontrado para este paciente"
+                return ResponseEntity.status(403).body("El paciente no está asociado a este doctor.");
             }
         } else {
             return ResponseEntity.status(404).body("Paciente no encontrado.");
         }
     }
+
 }
+
+
 
