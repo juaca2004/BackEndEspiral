@@ -22,7 +22,8 @@ public class Doctor {
 
 
     //Se crea la relación 1 a muchos (Un doctor puede tener muchos pacientes)
-    @OneToMany(mappedBy = "doctor")
+
+    @OneToMany(mappedBy = "doctor",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Patient> patients;
 
