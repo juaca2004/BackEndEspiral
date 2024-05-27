@@ -332,7 +332,7 @@ public class EchoController {
     @PostMapping("device/{idMedition}/measure")
     public ResponseEntity<?> receiveMeasurement(@RequestBody List<Sample> sampleRequestList, @PathVariable("idMedition") long idMedition) {
         // Loop through the received samples
-        System.out.println("llegue");
+        System.out.println(idMedition);
 
         for (Sample sampleRequest : sampleRequestList) {
             Sample sample = new Sample();
@@ -391,11 +391,10 @@ public class EchoController {
     @PostMapping("medition/{ccPatient}/create")
     public ResponseEntity<?> createMedition(@PathVariable String ccPatient, @RequestBody Medition medition) {
         var p = repositoryPatient.searchByCc(ccPatient);
+
         if (!p.isEmpty()) { //Es pq no encontro a nadie con la misma cedula
             Patient patient= p.get();
             medition.setPatient(patient);
-            patient.getMeditions().add(medition);
-            repositoryPatient.save(patient);
             meditionRepository.save(medition);
             return ResponseEntity.status(200).body(medition);
         } else {
