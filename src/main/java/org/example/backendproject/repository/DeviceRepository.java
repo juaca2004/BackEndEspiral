@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DeviceRepository extends CrudRepository<Device,Long> {
@@ -17,5 +18,8 @@ public interface DeviceRepository extends CrudRepository<Device,Long> {
 
     @Query("SELECT d FROM Device d WHERE d.name like :name AND d.doctor.id=:doctorId")
     public Optional<Device>  filterByName(@Param("name") String name, @Param("doctorId")long doctorId);
+
+    @Query("SELECT d FROM Device d WHERE  d.doctor.id=:doctorId")
+    public List<Device> ListDivice(@Param("doctorId")long doctorId);
 
 }

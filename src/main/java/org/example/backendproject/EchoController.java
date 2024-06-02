@@ -204,6 +204,18 @@ public class EchoController {
 
     }
 
+    @GetMapping("doctor/{doctorId}/Listmeasurement")
+    public ResponseEntity<?> Listmeasurement(@PathVariable("doctorId") long doctorId){
+        var patients = meditionRepository.ListOfMeditionDoctor(doctorId);
+        return ResponseEntity.status(200).body(patients);
+    }
+
+    @GetMapping("doctor/{doctorId}/ListPatient")
+    public ResponseEntity<?> listPatient(@PathVariable("doctorId") long doctorId){
+        var patients = patientRepository.ListPatientOfDoctor(doctorId);
+        return ResponseEntity.status(200).body(patients);
+    }
+
     @GetMapping("patient/medition/{cc}/{doctorId}")
     public ResponseEntity<?> filterMeditions(@PathVariable("cc") String cc,@PathVariable("doctorId") long doctorId) {
         var patient = repositoryPatient.filterByCC(cc, doctorId);
@@ -212,11 +224,7 @@ public class EchoController {
             return ResponseEntity.status(400).body(new filterPatientResponse("No matches in patient for doctor"));
         }else{
             var meditions = meditionRepository.filterByPatientCC(cc);
-            if (meditions.isEmpty()) {
-                return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches in medition for patient"));
-            } else {
-                return ResponseEntity.status(200).body(meditions);
-            }
+            return ResponseEntity.status(200).body(meditions);
         }
     }
     @GetMapping("patient/medition/getDevice/{id}/{deviceValue}")
@@ -253,6 +261,19 @@ public class EchoController {
             return ResponseEntity.status(200).body(comment);
         }
     }
+
+    @GetMapping("patient/searchmedition/{meditionid}")
+    public ResponseEntity<?> searchMedition(@PathVariable("meditionid") Long meditionid){
+        var medition = meditionRepository.serchById(meditionid);
+        if (medition.isPresent()) {
+            Medition meditionFound= medition.get();
+            return ResponseEntity.status(200).body(meditionFound);
+        } else {
+            return ResponseEntity.status(400).body(new DeleteRequest("Medicion no encontrada"));
+        }
+
+    }
+
 
     @PostMapping("device/createDevice")
     public ResponseEntity<?> createDevice(@RequestBody Device device) {
@@ -296,38 +317,6 @@ public class EchoController {
     }
 
     
-    @GetMapping("device/{NameDevice}/startmeasureDevice")
-    public ResponseEntity<?> startMeasurementDevice(@PathVariable("NameDevice") String NameDevice) {
-        var d = deviceRepository.searchByName(NameDevice);
-        if(d.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("device is not exist");
-        }else{
-            Device device= d.get();
-            if (device.isMeasuring()) {
-                return ResponseEntity.ok("Measurement started");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Measurement already in progress");
-            }
-        }
-
-    }
-    @GetMapping("device/{NameDevice}/stopmeasureDevice")
-    public ResponseEntity<?> stopMeasurementDevice(@PathVariable("NameDevice") String NameDevice) {
-        var d = deviceRepository.searchByName(NameDevice);
-        if(d.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("device is not exist");
-        }
-        else{
-            Device device= d.get();
-            if (!device.isMeasuring()) {
-                return ResponseEntity.ok("Measurement stopped");
-            }else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No measurement in progress to stop");
-            }
-        }
-    }
-
-
 
     @PostMapping("device/{idMedition}/measure")
     public ResponseEntity<?> receiveMeasurement(@RequestBody List<Sample> sampleRequestList, @PathVariable("idMedition") long idMedition) {
@@ -484,7 +473,6 @@ public class EchoController {
        List<Sample> samples =sampleRepository.findByMeditionId(meditionId);
 
        if(samples.isEmpty()){
-           System.out.println("nooooooo");
            return  ResponseEntity.status(404).body(new SamplesResponse("No Samples for this medition"));
        } else{
            double[] magnitudes = new double[samples.size()];
@@ -508,6 +496,12 @@ public class EchoController {
 
        }
 
+    }
+
+    @GetMapping("doctor/devices/{doctorId}")
+    public ResponseEntity<?> listDeviceDoctor(@PathVariable("doctorId") long doctorId){
+        var devices =deviceRepository.ListDivice(doctorId);
+        return ResponseEntity.status(200).body(devices);
     }
 }
 
