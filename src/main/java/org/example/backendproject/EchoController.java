@@ -488,7 +488,7 @@ public class EchoController {
 
            magnitudes = DFTUtils.normalize(magnitudes);
            double[] spectrum = DFTUtils.dftSpectrum(magnitudes);
-           double[] freqs = DFTUtils.dftFreq(magnitudes, 50);
+           double[] freqs = DFTUtils.dftFreq(magnitudes, 33);
 
            ArraysGraphics arraysGraphics = new ArraysGraphics(magnitudes, times,spectrum,freqs);
 
