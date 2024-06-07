@@ -197,7 +197,7 @@ public class EchoController {
     public ResponseEntity<?> searchPatients(@PathVariable("cc") String cc, @PathVariable("doctorId") long doctorId){
         var p = repositoryPatient.filterByCC(cc, doctorId);
         if(p.isEmpty()){
-            return ResponseEntity.status(400).body(new filterPatientResponse("Sin coincidencias en paciente para doctor"));
+            return ResponseEntity.status(400).body(new filterPatientResponse("Sin coincidencias"));
         }else {
             return ResponseEntity.status(200).body(p);
         }
