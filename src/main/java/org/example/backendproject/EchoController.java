@@ -120,9 +120,9 @@ public class EchoController {
                 repositoryPatient.save(patient);
             }
             meditionRepository.delete(medition);
-            return ResponseEntity.status(200).body("Medition deleted");
+            return ResponseEntity.status(200).body("Medición borrada");
         }else{
-            return ResponseEntity.status(400).body("Medition inexistent");
+            return ResponseEntity.status(400).body("Medición inexistente");
         }
     }
 
@@ -136,7 +136,7 @@ public class EchoController {
             System.out.println("doctor correctly removed so");
             return ResponseEntity.status(200).body(doctorFound);
         } else {
-            return ResponseEntity.status(400).body(new DeleteRequest("The user is not found"));
+            return ResponseEntity.status(400).body(new DeleteRequest("El usuario no se encuentra"));
         }
 
     }
@@ -146,7 +146,7 @@ public class EchoController {
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequestAdmin loginRequest) {
         var admin = repositoryAdmin.searchByLogin(loginRequest.getUsername(), loginRequest.getPassword());
         if (admin.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect name or password"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrecto nombre o contraseña"));
         } else {
             return ResponseEntity.status(200).body(admin.get());
         }
@@ -157,7 +157,7 @@ public class EchoController {
     public ResponseEntity<?> loginDoctor(@RequestBody LoginRequestDoctor loginRequest) {
         var doctor = repositoryDoctor.searchByLogin(loginRequest.getCC(), loginRequest.getPassword());
         if (doctor.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrect CC or password"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Incorrecta cédula o contraseña"));
         } else {
             return ResponseEntity.status(200).body(doctor.get());
         }
@@ -169,15 +169,15 @@ public class EchoController {
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         var optionalDoctor = repositoryDoctor.searchByLogin(changePasswordRequest.getCc(), changePasswordRequest.getPassword());
         if (optionalDoctor.isEmpty()) {
-            return ResponseEntity.status(401).body("Incorrect cc or password");
+            return ResponseEntity.status(401).body("Cedula incorrecta o contraseña");
         } else {
             if (changePasswordRequest.getPasswordNEW1().equals(changePasswordRequest.getPasswordNEW2())) {
                 Doctor doctor = optionalDoctor.get();
                 doctor.setPassword(changePasswordRequest.getPasswordNEW1());
                 repositoryDoctor.save(doctor);
-                return ResponseEntity.status(200).body("password changed");
+                return ResponseEntity.status(200).body("Contraseña cambiada");
             } else {
-                return ResponseEntity.status(402).body("Both passwords are not the same");
+                return ResponseEntity.status(402).body("Las contraseñas son diferentes");
             }
 
         }
@@ -188,7 +188,7 @@ public class EchoController {
     public ResponseEntity<?> filterPatient(@PathVariable("name") String name, @PathVariable("doctorId") long doctorId) {
         var patients = repositoryPatient.filterByName(name, doctorId);
         if (patients.isEmpty()) {
-            return ResponseEntity.status(400).body(new filterPatientResponse("No matches"));
+            return ResponseEntity.status(400).body(new filterPatientResponse("Sin coincidencias"));
         } else {
             return ResponseEntity.status(200).body(patients);
         }
@@ -197,7 +197,7 @@ public class EchoController {
     public ResponseEntity<?> searchPatients(@PathVariable("cc") String cc, @PathVariable("doctorId") long doctorId){
         var p = repositoryPatient.filterByCC(cc, doctorId);
         if(p.isEmpty()){
-            return ResponseEntity.status(400).body(new filterPatientResponse("No matches in patient for doctor"));
+            return ResponseEntity.status(400).body(new filterPatientResponse("Sin coincidencias en paciente para doctor"));
         }else {
             return ResponseEntity.status(200).body(p);
         }
@@ -221,7 +221,7 @@ public class EchoController {
         var patient = repositoryPatient.filterByCC(cc, doctorId);
 
         if(patient.isEmpty()){
-            return ResponseEntity.status(400).body(new filterPatientResponse("No matches in patient for doctor"));
+            return ResponseEntity.status(400).body(new filterPatientResponse("Sin coincidencias en paciente para doctor"));
         }else{
             var meditions = meditionRepository.filterByPatientCC(cc);
             return ResponseEntity.status(200).body(meditions);
@@ -231,7 +231,7 @@ public class EchoController {
     public ResponseEntity<?> FiltrerDevice(@PathVariable("id") long id,@PathVariable("deviceValue") String deviceValue) {
         var d = deviceRepository.filterByName(deviceValue, id);
         if(d.isEmpty()){
-            return ResponseEntity.status(400).body(new filterDeviceResponse("No matches in device for doctor"));
+            return ResponseEntity.status(400).body(new filterDeviceResponse("Sin coincidencias en el dispositivo para el doctor"));
         }else{
             Device device= d.get();
             return ResponseEntity.status(200).body(device);
@@ -251,7 +251,7 @@ public class EchoController {
         var medition = meditionRepository.serchById(meditionId);
         System.out.println(medition);
         if (medition.isEmpty()) {
-            return ResponseEntity.status(404).body(new filterCommentsResponse("There is no associated medication"));
+            return ResponseEntity.status(404).body(new filterCommentsResponse("No hay un medición asociada"));
         } else {
             comment.setMedition(medition.get());
             medition.get().getComments().add(comment);
@@ -280,9 +280,9 @@ public class EchoController {
         var d = deviceRepository.searchByName(device.getName());
         if (d.isEmpty()) {
             deviceRepository.save(device);
-            return ResponseEntity.status(200).body(new RegisterResponse("new device created"));
+            return ResponseEntity.status(200).body(new RegisterResponse("Nuevo dispositivo creado"));
         } else {
-            return ResponseEntity.status(409).body(new RegisterResponse("this device already exists"));
+            return ResponseEntity.status(409).body(new RegisterResponse("Este dispositivo ya existe"));
         }
     }
 
@@ -333,7 +333,7 @@ public class EchoController {
             // Assuming Medition class has a method to find by ID
             Medition medition = meditionRepository.serchById(idMedition).orElse(null);
             if (medition == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medition not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medición no encontrada");
             }
 
             sample.setMedition(medition);
@@ -344,7 +344,7 @@ public class EchoController {
             sampleRepository.save(sample);
         }
 
-        return ResponseEntity.ok("Measurements received and saved");
+        return ResponseEntity.ok("Mediciones recibidas y guardadas");
     }
 
 
@@ -352,12 +352,12 @@ public class EchoController {
     public ResponseEntity<?> startMeasure(@PathVariable("NameDevice") String name) {
         var d=deviceRepository.searchByName(name);
         if(d.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("device is not exist");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El dispositivo no existe");
         }else{
             Device device= d.get();
             device.setMeasuring(true);
             deviceRepository.save(device);
-            return ResponseEntity.status(200).body("medition started");
+            return ResponseEntity.status(200).body("Medición iniciada");
         }
 
     }
@@ -366,12 +366,12 @@ public class EchoController {
     public ResponseEntity<?> stopMeasure(@PathVariable("NameDevice") String name) {
         var d=deviceRepository.searchByName(name);
         if(d.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("device is not exist");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El dispositivo no existe");
         }else{
             Device device= d.get();
             device.setMeasuring(false);
             deviceRepository.save(device);
-            return ResponseEntity.status(200).body("medition stop");
+            return ResponseEntity.status(200).body("Medicion detenida");
         }
 
     }
@@ -402,9 +402,9 @@ public class EchoController {
             p.setEmail(modifiedPatient.getEmail());
             p.setPhone(modifiedPatient.getPhone());
             repositoryPatient.save(p);
-            return ResponseEntity.status(200).body(new ModifyPatientRequest("Patient modified correctly"));
+            return ResponseEntity.status(200).body(new ModifyPatientRequest("Paciente modificado correctamente"));
         } else {
-            return ResponseEntity.status(400).body(new ModifyPatientRequest("Problem"));
+            return ResponseEntity.status(400).body(new ModifyPatientRequest("Problema"));
         }
     }
 
@@ -439,7 +439,7 @@ public class EchoController {
     public ResponseEntity<?> filterMeasurementByPatientName(@PathVariable("patientCC") String patientCC, @PathVariable("doctorId") long doctorId) {
         List<Medition> meditionsFiltered= meditionRepository.searchByPatientCC(doctorId,patientCC);
         if(meditionsFiltered.isEmpty()){
-            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
+            return ResponseEntity.status(400).body(new filterMeditionsResponse("Sin coincidencias"));
         }
         else{
             return ResponseEntity.status(200).body(meditionsFiltered);
@@ -451,7 +451,7 @@ public class EchoController {
     public ResponseEntity<?> filterPatientsByName(@PathVariable("patientName") String patientName, @PathVariable("doctorId") long doctorId) {
         List<Medition> meditionsFiltered = meditionRepository.filterByPatientName(patientName, doctorId);
         if(meditionsFiltered.isEmpty()){
-            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
+            return ResponseEntity.status(400).body(new filterMeditionsResponse("Sin coincidencias"));
         }
         else{
             return ResponseEntity.status(200).body(meditionsFiltered);
@@ -462,7 +462,7 @@ public class EchoController {
     public ResponseEntity<?> filterMeasurementByDate(@PathVariable("dateA") Date dateA, @PathVariable("dateB") Date dateB, @PathVariable("doctorId") long doctorid) {
         List<Medition> meditionsFiltered = meditionRepository.filterByDate(dateA, dateB, doctorid);
         if (meditionsFiltered.isEmpty()) {
-            return ResponseEntity.status(400).body(new filterMeditionsResponse("No matches"));
+            return ResponseEntity.status(400).body(new filterMeditionsResponse("Sin coincidencias"));
         } else {
             return ResponseEntity.status(200).body(meditionsFiltered);
         }
@@ -473,7 +473,7 @@ public class EchoController {
        List<Sample> samples =sampleRepository.findByMeditionId(meditionId);
 
        if(samples.isEmpty()){
-           return  ResponseEntity.status(404).body(new SamplesResponse("No Samples for this medition"));
+           return  ResponseEntity.status(404).body(new SamplesResponse("Sin muestras para esta medición"));
        } else{
            double[] magnitudes = new double[samples.size()];
            long[] times = new long[samples.size()];
