@@ -32,7 +32,7 @@ public class EchoController {
 
     @Autowired
     MeditionRepository meditionRepository;
-
+    
     @Autowired
     CommentsRepository commentsRepository;
     @Autowired
