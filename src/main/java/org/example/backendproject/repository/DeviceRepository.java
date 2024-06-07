@@ -22,4 +22,7 @@ public interface DeviceRepository extends CrudRepository<Device,Long> {
     @Query("SELECT d FROM Device d WHERE  d.doctor.id=:doctorId")
     public List<Device> ListDivice(@Param("doctorId")long doctorId);
 
+    @Override
+    void delete(Device device);
+
 }

@@ -503,6 +503,30 @@ public class EchoController {
         var devices =deviceRepository.ListDivice(doctorId);
         return ResponseEntity.status(200).body(devices);
     }
+
+
+    @DeleteMapping("device/deleteDevice/{nameDevice}")
+    public ResponseEntity<?> deleteDevice(@PathVariable("nameDevice") String nameDevice){
+        var d = deviceRepository.searchByName(nameDevice);
+        if(d.isPresent()){
+            Device device = d.get();
+            Doctor doctor= device.getDoctor();
+            if (doctor != null) {
+                doctor.getDevices().remove(device);
+                repositoryDoctor.save(doctor);
+            }
+            deviceRepository.delete(device);
+            return ResponseEntity.status(200).body("Device deleted");
+        }else{
+            return ResponseEntity.status(400).body("Device inexistent");
+        }
+    }
+
+
+
+
+
+
 }
 
 
